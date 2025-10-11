@@ -1,0 +1,167 @@
+{
+  "info": {
+    "name": "SongBank - ChordPro API",
+    "description": "Ejemplos para probar el nuevo sistema ChordPro - ¡Súper fácil y rápido!",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "🎵 ChordPro - Crear Canción Fácil",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"chordProText\": \"{title: Amazing Grace}\\n{artist: Traditional}\\n{key: G}\\n\\n[G]Amazing [G7]grace how [C]sweet the [G]sound\\nThat [G]saved a [D]wretch like [G]me\\n[G]I once was [G7]lost but [C]now I'm [G]found\\nWas [G]blind but [D]now I [G]see\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/songs/chordpro",
+          "host": ["{{baseUrl}}"],
+          "path": ["songs", "chordpro"]
+        },
+        "description": "Crear una canción usando el formato ChordPro - ¡10x más rápido que el método tradicional!"
+      }
+    },
+    {
+      "name": "🎼 ChordPro - Canción Moderna",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"chordProText\": \"{title: How Great Thou Art}\\n{artist: Stuart K. Hine}\\n{key: C}\\n\\n{verse}\\n[C]O Lord my [F]God when [C]I in awesome wonder\\n[Am]Consider [F]all the [G]worlds thy hands have [C]made\\n[C]I see the [F]stars I [C]hear the rolling thunder\\n[Am]Thy power through[F]out the [G]universe dis[C]played\\n\\n{chorus}\\nThen sings my [F]soul my [C]savior God to [Am]thee\\n[F]How great thou [C]art how [G]great thou [C]art\\nThen sings my [F]soul my [C]savior God to [Am]thee\\n[F]How great thou [C]art how [G]great thou [C]art\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/songs/chordpro",
+          "host": ["{{baseUrl}}"],
+          "path": ["songs", "chordpro"]
+        },
+        "description": "Ejemplo de canción con verso y estribillo usando ChordPro"
+      }
+    },
+    {
+      "name": "🎸 ChordPro - Canción Contemporánea",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"chordProText\": \"{title: Here I Am to Worship}\\n{artist: Tim Hughes}\\n{key: E}\\n\\n{verse}\\n[E]Light of the [B]world you [C#m]stepped down into [A]darkness\\n[E]Opened my [B]eyes let me [A]see\\n[E]Beauty that [B]made this [C#m]heart adore [A]you\\n[E]Hope of a [B]life spent with [A]you\\n\\n{chorus}\\n[E]Here I am to [B]worship here I am to [C#m]bow down\\nHere I am to [A]say that you're my [E]God\\nYou're altogether [B]lovely altogether [C#m]worthy\\nAltogether [A]wonderful to [E]me\",\n  \"isBank\": true,\n  \"notes\": \"Canción muy popular para adoración\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/songs/chordpro",
+          "host": ["{{baseUrl}}"],
+          "path": ["songs", "chordpro"]
+        },
+        "description": "Ejemplo con acordes complejos y parámetros adicionales"
+      }
+    },
+    {
+      "name": "📋 Obtener Todas las Canciones",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/songs",
+          "host": ["{{baseUrl}}"],
+          "path": ["songs"]
+        },
+        "description": "Obtener lista de todas las canciones creadas"
+      }
+    },
+    {
+      "name": "📤 Exportar a ChordPro",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/songs/{{songId}}/chordpro",
+          "host": ["{{baseUrl}}"],
+          "path": ["songs", "{{songId}}", "chordpro"]
+        },
+        "description": "Exportar una canción existente a formato ChordPro para editar fácilmente. Reemplaza {{songId}} con el ID real de la canción."
+      }
+    },
+    {
+      "name": "🎯 Ver Canción Específica",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/songs/{{songId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["songs", "{{songId}}"]
+        },
+        "description": "Ver los detalles completos de una canción específica"
+      }
+    },
+    {
+      "name": "🔄 Transponer Canción",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"newKey\": \"D\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/songs/{{songId}}/transpose",
+          "host": ["{{baseUrl}}"],
+          "path": ["songs", "{{songId}}", "transpose"]
+        },
+        "description": "Transponer una canción a una nueva tonalidad"
+      }
+    },
+    {
+      "name": "😤 Método Tradicional (Tedioso)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Método Tradicional - MUY TEDIOSO\",\n  \"artist\": \"Ejemplo Complicado\",\n  \"key\": \"G\",\n  \"lyricsLines\": [\n    {\n      \"text\": \"Amazing grace how sweet the sound\",\n      \"chords\": [\n        { \"note\": \"G\", \"index\": 0 },\n        { \"note\": \"G7\", \"index\": 8 },\n        { \"note\": \"C\", \"index\": 18 },\n        { \"note\": \"G\", \"index\": 29 }\n      ]\n    },\n    {\n      \"text\": \"That saved a wretch like me\",\n      \"chords\": [\n        { \"note\": \"G\", \"index\": 5 },\n        { \"note\": \"D\", \"index\": 15 },\n        { \"note\": \"G\", \"index\": 25 }\n      ]\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/songs",
+          "host": ["{{baseUrl}}"],
+          "path": ["songs"]
+        },
+        "description": "⚠️ COMPARACIÓN: Así era antes - súper tedioso contar cada posición manualmente"
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "description": "URL base del servidor NestJS"
+    },
+    {
+      "key": "songId",
+      "value": "",
+      "description": "ID de la canción (se obtiene después de crear una canción)"
+    }
+  ]
+}

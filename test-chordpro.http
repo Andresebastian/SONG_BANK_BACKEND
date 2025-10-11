@@ -1,0 +1,44 @@
+### 🎵 Pruebas del Nuevo Sistema ChordPro
+
+### 1. Crear canción con ChordPro (SÚPER FÁCIL!)
+POST http://localhost:3000/songs/chordpro
+Content-Type: application/json
+
+{
+  "chordProText": "{title: Amazing Grace}\n{artist: Traditional}\n{key: G}\n\n[G]Amazing [G7]grace how [C]sweet the [G]sound\nThat [G]saved a [D]wretch like [G]me\n[G]I once was [G7]lost but [C]now I'm [G]found\nWas [G]blind but [D]now I [G]see"
+}
+
+### 2. Crear canción moderna
+POST http://localhost:3000/songs/chordpro
+Content-Type: application/json
+
+{
+  "chordProText": "{title: How Great Thou Art}\n{artist: Stuart K. Hine}\n{key: C}\n\n[C]O Lord my [F]God when [C]I in awesome wonder\n[Am]Consider [F]all the [G]worlds thy hands have [C]made\n[C]I see the [F]stars I [C]hear the rolling thunder\n[Am]Thy power through[F]out the [G]universe dis[C]played\n\nThen sings my [F]soul my [C]savior God to [Am]thee\n[F]How great thou [C]art how [G]great thou [C]art\nThen sings my [F]soul my [C]savior God to [Am]thee\n[F]How great thou [C]art how [G]great thou [C]art"
+}
+
+### 3. Obtener todas las canciones
+GET http://localhost:3000/songs
+
+### 4. Exportar canción a ChordPro (usar ID de la canción creada)
+GET http://localhost:3000/songs/SONG_ID_HERE/chordpro
+
+### 5. Comparación: Crear con método tradicional (MUY TEDIOSO)
+POST http://localhost:3000/songs
+Content-Type: application/json
+
+{
+  "title": "Método Tradicional",
+  "artist": "Tedioso",
+  "key": "C",
+  "lyricsLines": [
+    {
+      "text": "Amazing grace how sweet the sound",
+      "chords": [
+        { "note": "C", "index": 0 },
+        { "note": "C7", "index": 8 },
+        { "note": "F", "index": 18 },
+        { "note": "C", "index": 29 }
+      ]
+    }
+  ]
+}
