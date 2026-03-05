@@ -29,7 +29,6 @@ export class SetsController {
   @Roles(PermissionType.SETLIST_CREATE)
   async create(@Body() dto: CreateSetDto, @Request() req) {
     const newSet = await this.setsService.create(dto, req.user.userId);
-    
     return {
       message: 'Setlist creado correctamente',
       data: newSet,
@@ -44,14 +43,12 @@ export class SetsController {
   @Roles(PermissionType.SETLIST_VIEW)
   async findActive() {
     const activeSet = await this.setsService.findActive();
-    
     if (!activeSet) {
       return {
         message: 'No existe un setlist activo en este momento',
         data: null,
       };
     }
-    
     return {
       message: 'Setlist activo encontrado',
       data: activeSet,
@@ -66,14 +63,12 @@ export class SetsController {
   @Roles(PermissionType.SETLIST_VIEW)
   async findAll() {
     const sets = await this.setsService.findAll();
-    
     if (!sets || sets.length === 0) {
       return {
         message: 'No hay setlists creados',
         data: [],
       };
     }
-    
     return {
       message: `Se encontraron ${sets.length} setlist${sets.length > 1 ? 's' : ''}`,
       data: sets,
@@ -88,11 +83,9 @@ export class SetsController {
   @Roles(PermissionType.SETLIST_EDIT)
   async update(@Param('id') id: string, @Body() dto: Partial<CreateSetDto>) {
     const updatedSet = await this.setsService.update(id, dto);
-    
     if (!updatedSet) {
       throw new NotFoundException(`Setlist con ID ${id} no encontrado`);
     }
-    
     return {
       message: 'Setlist actualizado correctamente',
       data: updatedSet,

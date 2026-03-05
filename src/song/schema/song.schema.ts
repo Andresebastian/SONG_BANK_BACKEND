@@ -38,6 +38,9 @@ export class Song {
   @Prop({ default: '' })
   notes: string;
 
+  @Prop({ required: false, type: [String], default: [] })
+  tags: string[];
+
   @Prop({ default: false })
   isBank: boolean;
 }

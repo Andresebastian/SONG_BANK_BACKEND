@@ -59,13 +59,14 @@ export class SongsController {
     @Query('title') title?: string,
     @Query('artist') artist?: string,
     @Query('key') key?: string,
+    @Query('tags') tags?: string,
   ): Promise<Song[]> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    return (await this.songsService.search({
+    return await this.songsService.search({
       title: title || undefined,
       artist: artist || undefined,
       key: key || undefined,
-    })) as Song[];
+      tags: tags || undefined,
+    });
   }
 
   /**
@@ -78,8 +79,7 @@ export class SongsController {
     if (!query) {
       throw new BadRequestException('Debe proporcionar un término de búsqueda');
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    return (await this.songsService.searchByTitle(query)) as Song[];
+    return await this.songsService.searchByTitle(query);
   }
 
   /**
@@ -92,8 +92,7 @@ export class SongsController {
     if (!query) {
       throw new BadRequestException('Debe proporcionar un término de búsqueda');
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    return (await this.songsService.searchByArtist(query)) as Song[];
+    return await this.songsService.searchByArtist(query);
   }
 
   /**
@@ -108,8 +107,7 @@ export class SongsController {
         'Debe proporcionar una nota/tono para buscar',
       );
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    return (await this.songsService.searchByKey(query)) as Song[];
+    return await this.songsService.searchByKey(query);
   }
 
   @Get(':id')

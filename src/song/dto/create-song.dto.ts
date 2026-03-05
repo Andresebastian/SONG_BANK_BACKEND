@@ -79,5 +79,10 @@ export class CreateSongChordProDto {
   notes?: string;
 
   @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  tags?: string[];
+
+  @IsOptional()
   isBank?: boolean;
 }

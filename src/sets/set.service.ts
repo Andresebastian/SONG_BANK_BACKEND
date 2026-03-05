@@ -9,7 +9,7 @@ export class SetsService {
   constructor(@InjectModel(Set.name) private setModel: Model<Set>) {}
 
   async create(data: CreateSetDto, userId: string): Promise<Set> {
-    await this.setModel.updateMany({}, { $set: { active: false } });
+    //await this.setModel.updateMany({}, { $set: { active: false } });
 
     // Crear fecha en zona horaria local para evitar problemas con UTC
     // Si recibimos '2025-10-11', debe ser el 11 de octubre, no el 10

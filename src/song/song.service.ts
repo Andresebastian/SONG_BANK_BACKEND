@@ -37,6 +37,7 @@ export class SongsService {
     const title = data.title || metadata.title || 'Canción sin título';
     const artist = data.artist || metadata.artist || 'Artista desconocido';
     const key = data.key || metadata.key || 'C';
+    const tags = metadata.tags ?? [];
 
     // Convertir el texto ChordPro a la estructura interna
     const lyricsLines = this.chordProParser.parseChordProToLyricLines(
@@ -47,6 +48,7 @@ export class SongsService {
       title,
       artist,
       key,
+      tags,
       notes: data.notes || '',
       isBank: data.isBank || false,
       lyricsLines,
@@ -110,8 +112,9 @@ export class SongsService {
     title?: string;
     artist?: string;
     key?: string;
+    tags?: string;
   }): Promise<Song[]> {
-    const query: any = {};
+    const query: Record<string, unknown> = {};
 
     if (params.title) {
       query.title = { $regex: params.title, $options: 'i' };
@@ -123,6 +126,16 @@ export class SongsService {
 
     if (params.key) {
       query.key = { $regex: `^${params.key}$`, $options: 'i' };
+    }
+
+    if (params.tags) {
+      const tagsArray = params.tags
+        .split(',')
+        .map((t) => t.trim().toLowerCase())
+        .filter(Boolean);
+      if (tagsArray.length > 0) {
+        query.tags = { $in: tagsArray };
+      }
     }
 
     return this.songModel.find(query).lean().exec() as Promise<Song[]>;

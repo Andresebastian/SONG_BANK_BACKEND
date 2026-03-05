@@ -23,13 +23,13 @@ export class ChordProParserService {
       // Detectar secciones como {verse}, {chorus}, etc.
       if (trimmedLine.startsWith('{') && trimmedLine.endsWith('}')) {
         const sectionContent = trimmedLine.slice(1, -1).toLowerCase();
-        
+
         // Si es una sección musical, actualizar la sección actual
         if (this.isMusicSection(sectionContent)) {
           currentSection = sectionContent;
           continue;
         }
-        
+
         // Si es metadata (title, artist, key), ignorar
         if (sectionContent.includes(':')) {
           continue;
@@ -50,10 +50,25 @@ export class ChordProParserService {
    */
   private isMusicSection(section: string): boolean {
     const musicSections = [
-      'verse', 'chorus', 'bridge', 'intro', 'outro', 'pre-chorus', 
-      'prechorus', 'refrain', 'tag', 'coda', 'instrumental',
-      'verse1', 'verse2', 'verse3', 'verse4',
-      'chorus1', 'chorus2', 'bridge1', 'bridge2'
+      'verse',
+      'chorus',
+      'bridge',
+      'intro',
+      'outro',
+      'pre-chorus',
+      'prechorus',
+      'refrain',
+      'tag',
+      'coda',
+      'instrumental',
+      'verse1',
+      'verse2',
+      'verse3',
+      'verse4',
+      'chorus1',
+      'chorus2',
+      'bridge1',
+      'bridge2',
     ];
     return musicSections.includes(section.toLowerCase());
   }
@@ -68,7 +83,7 @@ export class ChordProParserService {
 
     // Regex para encontrar acordes en formato [Chord]
     const chordRegex = /\[([^\]]+)\]/g;
-    let match;
+    let match: RegExpExecArray | null;
     let lastIndex = 0;
 
     while ((match = chordRegex.exec(line)) !== null) {
@@ -123,7 +138,7 @@ export class ChordProParserService {
         currentSection = lyricLine.section;
         chordProText += `\n{${currentSection}}\n`;
       }
-      
+
       chordProText += this.convertLineToChordPro(lyricLine) + '\n';
     }
 
@@ -142,7 +157,9 @@ export class ChordProParserService {
     let lastIndex = 0;
 
     // Ordenar acordes por posición
-    const sortedChords = [...lyricLine.chords].sort((a, b) => a.index - b.index);
+    const sortedChords = [...lyricLine.chords].sort(
+      (a, b) => a.index - b.index,
+    );
 
     for (const chord of sortedChords) {
       // Agregar texto antes del acorde
@@ -165,8 +182,14 @@ export class ChordProParserService {
     title?: string;
     artist?: string;
     key?: string;
+    tags?: string[];
   } {
-    const metadata: any = {};
+    const metadata: {
+      title?: string;
+      artist?: string;
+      key?: string;
+      tags?: string[];
+    } = {};
     const lines = chordProText.split('\n');
 
     for (const line of lines) {
@@ -188,6 +211,18 @@ export class ChordProParserService {
           case 'k':
             metadata.key = value;
             break;
+          case 'tags':
+          case 'tag': {
+            // Aceptar tanto "amor,prueba" como "[amor,prueba]"
+            const tagsStr = value.replace(/^\[|\]$/g, '').trim();
+            metadata.tags = tagsStr
+              ? tagsStr
+                  .split(',')
+                  .map((tag: string) => tag.trim().toLowerCase())
+                  .filter(Boolean)
+              : [];
+            break;
+          }
         }
       }
     }
@@ -202,7 +237,7 @@ export class ChordProParserService {
     // Verificar que tenga al menos algunos acordes o metadatos
     const hasChords = /\[[^\]]+\]/.test(text);
     const hasMetadata = /\{[^}]+\}/.test(text);
-    
+
     return hasChords || hasMetadata;
   }
 }
