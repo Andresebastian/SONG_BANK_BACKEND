@@ -43,6 +43,9 @@ export class Song {
 
   @Prop({ default: false })
   isBank: boolean;
+
+  @Prop({ default: '' })
+  youtubeUrl: string;
 }
 
 export const SongSchema = SchemaFactory.createForClass(Song);

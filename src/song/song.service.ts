@@ -51,6 +51,7 @@ export class SongsService {
       tags,
       notes: data.notes || '',
       isBank: data.isBank || false,
+      youtubeUrl: data.youtubeUrl || '',
       lyricsLines,
     });
 

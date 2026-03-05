@@ -55,6 +55,10 @@ export class CreateSongDto {
 
   @IsOptional()
   isBank?: boolean;
+
+  @IsOptional()
+  @IsString()
+  youtubeUrl?: string;
 }
 
 // Nueva alternativa: formato ChordPro
@@ -85,4 +89,8 @@ export class CreateSongChordProDto {
 
   @IsOptional()
   isBank?: boolean;
+
+  @IsOptional()
+  @IsString()
+  youtubeUrl?: string;
 }

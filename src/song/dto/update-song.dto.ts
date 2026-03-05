@@ -51,4 +51,8 @@ export class UpdateSongDto {
   @IsOptional()
   @IsBoolean()
   isBank?: boolean;
+
+  @IsOptional()
+  @IsString()
+  youtubeUrl?: string;
 }
