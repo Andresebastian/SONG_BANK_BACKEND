@@ -19,6 +19,9 @@ export class User {
 
   @Prop()
   refreshTokenHash?: string;
+
+  @Prop()
+  pushToken?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

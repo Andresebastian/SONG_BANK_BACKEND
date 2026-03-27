@@ -64,6 +64,21 @@ export class UsersService {
     return this.userModel.findOne({ email }).lean().exec();
   }
 
+  async savePushToken(userId: string, pushToken: string): Promise<void> {
+    await this.userModel.findByIdAndUpdate(userId, { pushToken }).exec();
+  }
+
+  async getAllPushTokens(): Promise<string[]> {
+    const users = await this.userModel
+      .find({ pushToken: { $exists: true, $ne: null } })
+      .select('pushToken')
+      .lean()
+      .exec();
+    return users
+      .map((u) => (u as any).pushToken as string)
+      .filter(Boolean);
+  }
+
   async validatePassword(user: User, password: string): Promise<boolean> {
     return bcrypt.compare(password, user.password);
   }

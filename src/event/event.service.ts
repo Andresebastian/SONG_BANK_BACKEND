@@ -47,10 +47,48 @@ export class EventService {
   }
 
   async update(id: string, dto: Partial<CreateEventDto>) {
-    return this.eventModel
+    const previous = await this.eventModel.findById(id).select('status name').lean().exec();
+    const updated = await this.eventModel
       .findByIdAndUpdate(id, { ...dto }, { new: true })
       .populate('setId')
       .exec();
+
+    // Enviar notificación push cuando un evento pasa a estado "active"
+    if (dto.status === 'active' && previous?.status !== 'active' && updated) {
+      this.sendPushToAllUsers(
+        '🎵 Nuevo setlist publicado',
+        `"${updated.name}" ya está disponible`,
+        { eventId: id },
+      ).catch(() => {/* notificación no crítica, ignorar errores */});
+    }
+
+    return updated;
+  }
+
+  private async sendPushToAllUsers(
+    title: string,
+    body: string,
+    data: Record<string, string>,
+  ): Promise<void> {
+    const users = await this.userModel
+      .find({ pushToken: { $exists: true, $ne: null } })
+      .select('pushToken')
+      .lean()
+      .exec();
+
+    const tokens = users
+      .map((u) => (u as any).pushToken as string)
+      .filter((t) => t?.startsWith('ExponentPushToken'));
+
+    if (tokens.length === 0) return;
+
+    const messages = tokens.map((to) => ({ to, title, body, data, sound: 'default' }));
+
+    await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(messages),
+    });
   }
 
   async remove(id: string) {

@@ -2,11 +2,13 @@ import {
   Controller,
   Get,
   Post,
+  Patch,
   Body,
   Param,
   Delete,
   Put,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './schemas/user.schema';
@@ -14,6 +16,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import { PermissionType } from '../rols/schema/rol.schema';
+import type { RequestWithUser } from '../common/interfaces/request-with-user.interface';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -62,5 +65,14 @@ export class UsersController {
   @Roles(PermissionType.USER_DELETE)
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
+  }
+
+  /** Cualquier usuario autenticado puede registrar su push token */
+  @Patch('me/push-token')
+  savePushToken(
+    @Body('pushToken') pushToken: string,
+    @Request() req: RequestWithUser,
+  ) {
+    return this.usersService.savePushToken(req.user.userId, pushToken);
   }
 }
