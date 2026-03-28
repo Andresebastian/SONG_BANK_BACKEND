@@ -65,6 +65,21 @@ export class EventService {
     return updated;
   }
 
+  async sendCustomNotification(title: string, body: string): Promise<{ sent: number }> {
+    const users = await this.userModel
+      .find({ pushToken: { $exists: true, $ne: null } })
+      .select('pushToken')
+      .lean()
+      .exec();
+    const tokens = users
+      .map((u) => (u as any).pushToken as string)
+      .filter((t) => t?.startsWith('ExponentPushToken'));
+    if (tokens.length > 0) {
+      await this.sendPushToAllUsers(title, body, {});
+    }
+    return { sent: tokens.length };
+  }
+
   private async sendPushToAllUsers(
     title: string,
     body: string,

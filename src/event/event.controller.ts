@@ -56,4 +56,18 @@ export class EventController {
   remove(@Param('id') id: string) {
     return this.eventService.remove(id);
   }
+
+  /** Archivar evento (cambio rápido de estado sin enviar body completo) */
+  @Put(':id/archive')
+  @Roles(PermissionType.EVENT_EDIT)
+  archive(@Param('id') id: string) {
+    return this.eventService.update(id, { status: 'archived' });
+  }
+
+  /** Enviar notificación push personalizada — solo directores */
+  @Post('notifications/send')
+  @Roles(PermissionType.EVENT_EDIT)
+  sendNotification(@Body() dto: { title: string; body: string }) {
+    return this.eventService.sendCustomNotification(dto.title, dto.body);
+  }
 }
