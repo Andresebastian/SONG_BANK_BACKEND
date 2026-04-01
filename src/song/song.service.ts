@@ -82,6 +82,7 @@ export class SongsService {
   async searchByTitle(title: string): Promise<Song[]> {
     return this.songModel
       .find({ title: { $regex: title, $options: 'i' } })
+      .collation({ locale: 'es', strength: 1 })
       .lean()
       .exec() as Promise<Song[]>;
   }
@@ -92,6 +93,7 @@ export class SongsService {
   async searchByArtist(artist: string): Promise<Song[]> {
     return this.songModel
       .find({ artist: { $regex: artist, $options: 'i' } })
+      .collation({ locale: 'es', strength: 1 })
       .lean()
       .exec() as Promise<Song[]>;
   }
@@ -139,7 +141,11 @@ export class SongsService {
       }
     }
 
-    return this.songModel.find(query).lean().exec() as Promise<Song[]>;
+    return this.songModel
+      .find(query)
+      .collation({ locale: 'es', strength: 1 })
+      .lean()
+      .exec() as Promise<Song[]>;
   }
 
   async update(id: string, data: UpdateSongDto): Promise<Song> {
