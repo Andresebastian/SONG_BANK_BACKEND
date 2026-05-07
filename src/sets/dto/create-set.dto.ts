@@ -6,6 +6,7 @@ import {
   IsOptional,
   IsInt,
   Min,
+  Max,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -20,6 +21,12 @@ class SongInSetDto {
   @IsInt()
   @Min(0)
   order: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(5)
+  rating?: number;
 }
 
 export class CreateSetDto {

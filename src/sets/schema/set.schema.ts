@@ -15,6 +15,8 @@ export class Set extends Document {
         songId: { type: Types.ObjectId, ref: 'Song' },
         order: Number,
         transposeKey: { type: String, required: false },
+        rating: { type: Number, min: 1, max: 5, required: false },
+        ratedAt: { type: Date, required: false },
       },
     ],
   })
@@ -22,6 +24,8 @@ export class Set extends Document {
     songId: Types.ObjectId;
     order: number;
     transposeKey?: string;
+    rating?: number;
+    ratedAt?: Date;
   }[];
 
   @Prop({ default: true })

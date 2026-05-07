@@ -5,12 +5,14 @@ import {
   Body,
   Param,
   Patch,
+  Query,
   UseGuards,
   Request,
   NotFoundException,
 } from '@nestjs/common';
 import { SetsService } from './set.service';
 import { CreateSetDto } from './dto/create-set.dto';
+import { RateSetSongDto } from './dto/rate-set-song.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
@@ -72,6 +74,47 @@ export class SetsController {
     return {
       message: `Se encontraron ${sets.length} setlist${sets.length > 1 ? 's' : ''}`,
       data: sets,
+    };
+  }
+
+  @Get('song-rankings')
+  @Roles(PermissionType.SETLIST_VIEW)
+  async getSongRankings() {
+    const rankings = await this.setsService.getSongRankings();
+    return {
+      message: `Se encontraron ${rankings.length} canción${rankings.length !== 1 ? 'es' : ''} calificadas`,
+      data: rankings,
+    };
+  }
+
+  @Get('reports/songs')
+  @Roles(PermissionType.SETLIST_VIEW)
+  async getSongReports(
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+  ) {
+    const report = await this.setsService.getSongReports(from, to);
+    return {
+      message: 'Reporte de canciones generado correctamente',
+      data: report,
+    };
+  }
+
+  @Patch(':setId/songs/:songId/rating')
+  @Roles(PermissionType.SETLIST_EDIT)
+  async rateSong(
+    @Param('setId') setId: string,
+    @Param('songId') songId: string,
+    @Body() dto: RateSetSongDto,
+  ) {
+    const updatedSet = await this.setsService.rateSong(
+      setId,
+      songId,
+      dto.rating,
+    );
+    return {
+      message: 'Calificación guardada correctamente',
+      data: updatedSet,
     };
   }
 
