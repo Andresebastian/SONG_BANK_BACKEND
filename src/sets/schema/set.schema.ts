@@ -1,6 +1,20 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
+export class ArrangementSection {
+  @Prop({ required: true })
+  section: string;
+
+  @Prop({ required: true })
+  order: number;
+
+  @Prop({ required: false, default: '' })
+  comment?: string;
+
+  @Prop({ required: false, min: 1, default: 1 })
+  repeat?: number;
+}
+
 @Schema({ timestamps: true })
 export class Set extends Document {
   @Prop({ required: true })
@@ -17,6 +31,17 @@ export class Set extends Document {
         transposeKey: { type: String, required: false },
         rating: { type: Number, min: 1, max: 5, required: false },
         ratedAt: { type: Date, required: false },
+        arrangementSections: {
+          type: [
+            {
+              section: { type: String, required: true },
+              order: { type: Number, required: true },
+              comment: { type: String, required: false, default: '' },
+              repeat: { type: Number, min: 1, required: false, default: 1 },
+            },
+          ],
+          default: [],
+        },
       },
     ],
   })
@@ -26,6 +51,7 @@ export class Set extends Document {
     transposeKey?: string;
     rating?: number;
     ratedAt?: Date;
+    arrangementSections?: ArrangementSection[];
   }[];
 
   @Prop({ default: true })

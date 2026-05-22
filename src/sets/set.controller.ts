@@ -11,7 +11,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { SetsService } from './set.service';
-import { CreateSetDto } from './dto/create-set.dto';
+import { ArrangementSectionDto, CreateSetDto } from './dto/create-set.dto';
 import { RateSetSongDto } from './dto/rate-set-song.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
@@ -114,6 +114,29 @@ export class SetsController {
     );
     return {
       message: 'Calificación guardada correctamente',
+      data: updatedSet,
+    };
+  }
+
+  /**
+   * Actualizar la estructura/arreglo de una canción solo dentro de este setlist.
+   * Útil durante el ensayo para mover secciones y dejar comentarios visibles al equipo.
+   */
+  @Patch(':setId/songs/:songId/arrangement')
+  @Roles(PermissionType.SETLIST_EDIT)
+  async updateSongArrangement(
+    @Param('setId') setId: string,
+    @Param('songId') songId: string,
+    @Body() dto: { arrangementSections: ArrangementSectionDto[] },
+  ) {
+    const updatedSet = await this.setsService.updateSongArrangement(
+      setId,
+      songId,
+      dto.arrangementSections,
+    );
+
+    return {
+      message: 'Estructura de la canción actualizada para este setlist',
       data: updatedSet,
     };
   }

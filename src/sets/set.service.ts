@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Set } from './schema/set.schema';
-import { CreateSetDto } from './dto/create-set.dto';
+import { ArrangementSectionDto, CreateSetDto } from './dto/create-set.dto';
 import { Song, SongDocument } from '../song/schema/song.schema';
 
 @Injectable()
@@ -218,6 +218,40 @@ export class SetsService {
         { new: true },
       )
       .populate('songs.songId')
+      .exec();
+
+    if (!updatedSet) {
+      throw new NotFoundException('Setlist o canción no encontrada');
+    }
+
+    return updatedSet;
+  }
+
+  async updateSongArrangement(
+    setId: string,
+    songId: string,
+    arrangementSections: ArrangementSectionDto[],
+  ): Promise<Set> {
+    const normalizedSections = arrangementSections
+      .slice()
+      .sort((a, b) => a.order - b.order)
+      .map((section, index) => ({
+        section: section.section,
+        order: section.order ?? index,
+        comment: section.comment ?? '',
+        repeat: section.repeat ?? 1,
+      }));
+
+    const updatedSet = await this.setModel
+      .findOneAndUpdate(
+        { _id: setId, 'songs.songId': songId },
+        {
+          $set: {
+            'songs.$.arrangementSections': normalizedSections,
+          },
+        },
+        { new: true },
+      )
       .exec();
 
     if (!updatedSet) {

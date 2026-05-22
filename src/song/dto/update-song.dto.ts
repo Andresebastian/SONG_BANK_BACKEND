@@ -27,6 +27,10 @@ class LyricLineDto {
   @ValidateNested({ each: true })
   @Type(() => ChordPositionDto)
   chords?: ChordPositionDto[];
+
+  @IsOptional()
+  @IsString()
+  section?: string;
 }
 
 export class UpdateSongDto {

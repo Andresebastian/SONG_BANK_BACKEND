@@ -17,6 +17,7 @@ export class SongsService {
     const lyricsLines = data.lyricsLines.map((line) => ({
       text: line.text,
       chords: line.chords ?? [],
+      section: line.section,
     }));
 
     const song = new this.songModel({
@@ -149,13 +150,20 @@ export class SongsService {
   }
 
   async update(id: string, data: UpdateSongDto): Promise<Song> {
-    const lyricsLines = data.lyricsLines?.map((line) => ({
-      text: line.text,
-      chords: line.chords ?? [],
-    }));
+    const updateData: Partial<UpdateSongDto> & { lyricsLines?: unknown[] } = {
+      ...data,
+    };
+
+    if (data.lyricsLines) {
+      updateData.lyricsLines = data.lyricsLines.map((line) => ({
+        text: line.text,
+        chords: line.chords ?? [],
+        section: line.section,
+      }));
+    }
 
     const song = await this.songModel
-      .findByIdAndUpdate(id, { ...data, lyricsLines }, { new: true })
+      .findByIdAndUpdate(id, updateData, { new: true })
       .lean()
       .exec();
     if (!song) throw new NotFoundException('Canción no encontrada');
