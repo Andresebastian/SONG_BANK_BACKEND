@@ -53,6 +53,11 @@ export class UpdateSongDto {
   notes?: string;
 
   @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  tags?: string[];
+
+  @IsOptional()
   @IsBoolean()
   isBank?: boolean;
 

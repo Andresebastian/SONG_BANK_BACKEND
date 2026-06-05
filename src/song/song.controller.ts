@@ -5,6 +5,7 @@ import {
   Param,
   Body,
   Patch,
+  Put,
   UseGuards,
   Query,
   BadRequestException,
@@ -120,6 +121,21 @@ export class SongsController {
   @Roles(PermissionType.SONG_EDIT)
   update(@Param('id') id: string, @Body() data: UpdateSongDto) {
     return this.songsService.update(id, data);
+  }
+
+  @Put(':id')
+  @Roles(PermissionType.SONG_EDIT)
+  updatePut(@Param('id') id: string, @Body() data: UpdateSongDto) {
+    return this.songsService.update(id, data);
+  }
+
+  @Put(':id/chordpro')
+  @Roles(PermissionType.SONG_EDIT)
+  updateFromChordPro(
+    @Param('id') id: string,
+    @Body() data: CreateSongChordProDto,
+  ) {
+    return this.songsService.updateFromChordPro(id, data);
   }
 
   /**

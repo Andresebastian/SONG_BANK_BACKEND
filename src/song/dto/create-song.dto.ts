@@ -54,6 +54,11 @@ export class CreateSongDto {
   notes?: string;
 
   @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  tags?: string[];
+
+  @IsOptional()
   isBank?: boolean;
 
   @IsOptional()

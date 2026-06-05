@@ -170,6 +170,36 @@ export class SongsService {
     return song;
   }
 
+  /**
+   * Actualiza una canción desde formato ChordPro conservando el mismo documento.
+   */
+  async updateFromChordPro(id: string, data: CreateSongChordProDto): Promise<Song> {
+    const existingSong = await this.findOne(id);
+    const metadata = this.chordProParser.extractMetadata(data.chordProText);
+
+    const lyricsLines = this.chordProParser.parseChordProToLyricLines(
+      data.chordProText,
+    );
+
+    const updateData: Partial<Song> = {
+      title: data.title || metadata.title || existingSong.title,
+      artist: data.artist || metadata.artist || existingSong.artist,
+      key: data.key || metadata.key || existingSong.key,
+      tags: data.tags ?? metadata.tags ?? existingSong.tags,
+      notes: data.notes ?? existingSong.notes,
+      youtubeUrl: data.youtubeUrl ?? existingSong.youtubeUrl,
+      lyricsLines,
+    };
+
+    const song = await this.songModel
+      .findByIdAndUpdate(id, updateData, { new: true })
+      .lean()
+      .exec();
+
+    if (!song) throw new NotFoundException('Canción no encontrada');
+    return song;
+  }
+
   async remove(id: string): Promise<void> {
     const result = await this.songModel.findByIdAndDelete(id).exec();
     if (!result) throw new NotFoundException('Canción no encontrada');
